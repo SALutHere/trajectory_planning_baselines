@@ -1,13 +1,13 @@
 import algorithms
 import scenarios
 
-from core.experiment import run_once
-from visualize.plot import save_run_visuals
+from core.experiment import run_and_save
 
 if __name__ == "__main__":
-    # r = run_once("random_grid")
-    # r = run_once("maze_grid")
-    r = run_once("warehouse_grid")
+    scenario = "random_grid"
+    run_id = 0
+
+    r = run_and_save(scenario, run_id)
 
     print("Start:", r["start"])
     print("Goal:", r["goal"])
@@ -18,8 +18,3 @@ if __name__ == "__main__":
         print("path found:", res["path"] is not None)
         if res["path"]:
             print("path length:", len(res["path"]))
-
-    save_run_visuals(
-        r["grid"], r["start"], r["goal"],
-        r["results"], run_id=0, outdir="output/runs"
-    )
