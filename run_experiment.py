@@ -6,7 +6,8 @@ from visualize.plot import save_run_visuals
 
 if __name__ == "__main__":
     # r = run_once("random_grid")
-    r = run_once("maze_grid")
+    # r = run_once("maze_grid")
+    r = run_once("warehouse_grid")
 
     print("Start:", r["start"])
     print("Goal:", r["goal"])
