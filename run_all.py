@@ -4,6 +4,7 @@ import scenarios
 
 from core.registry import SCENARIOS
 from core.experiment import run_multiple_and_save
+from core.utils import reset_output
 
 
 def make_scenario(cls, **kwargs):
@@ -20,6 +21,8 @@ if __name__ == "__main__":
     parser.add_argument("--runs", type=int, default=10)
 
     args = parser.parse_args()
+
+    reset_output()
 
     kwargs = {}
     for key in ["width", "height", "obstacle_prob", "seed"]:
