@@ -5,7 +5,8 @@ from core.experiment import run_once
 from visualize.plot import save_run_visuals
 
 if __name__ == "__main__":
-    r = run_once("random_grid")
+    # r = run_once("random_grid")
+    r = run_once("maze_grid")
 
     print("Start:", r["start"])
     print("Goal:", r["goal"])
