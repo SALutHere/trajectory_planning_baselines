@@ -1,20 +1,41 @@
+import argparse
 import algorithms
 import scenarios
 
+from core.registry import SCENARIOS
 from core.experiment import run_and_save
 
+
+def make_scenario(name, **kwargs):
+    if name not in SCENARIOS:
+        raise ValueError(f"Unknown scenario {name}")
+
+    cls = SCENARIOS[name].__class__
+    return cls(**kwargs)
+
+
 if __name__ == "__main__":
-    scenario = "random_grid"
-    run_id = 0
+    parser = argparse.ArgumentParser()
 
-    r = run_and_save(scenario, run_id)
+    parser.add_argument("scenario", type=str)
+    parser.add_argument("--width", type=int, default=None)
+    parser.add_argument("--height", type=int, default=None)
+    parser.add_argument("--obstacle_prob", type=float, default=None)
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--run_id", type=int, default=0)
 
-    print("Start:", r["start"])
-    print("Goal:", r["goal"])
+    args = parser.parse_args()
 
-    for algo, res in r["results"].items():
-        print(f"\n=== {algo} ===")
-        print("time_ms:", res["time_ms"])
-        print("path found:", res["path"] is not None)
-        if res["path"]:
-            print("path length:", len(res["path"]))
+    kwargs = {}
+    for key in ["width", "height", "obstacle_prob", "seed"]:
+        val = getattr(args, key)
+        if val is not None:
+            kwargs[key] = val
+
+    scenario = make_scenario(args.scenario, **kwargs)
+
+    SCENARIOS[args.scenario] = scenario
+
+    r = run_and_save(args.scenario, args.run_id)
+
+    print("\n✅ Done")
