@@ -2,6 +2,7 @@
 import csv
 import os
 from core.registry import PLANNERS, SCENARIOS
+from core.grid import Grid
 from visualize.plot import save_run_visuals
 
 
@@ -60,13 +61,15 @@ def run_and_save(scenario_name, run_id, outdir="output"):
     )
 
     for algo, res in r["results"].items():
+        path = res["path"]
+
         row = {
             "run_id": run_id,
             "scenario": scenario_name,
             "algorithm": algo,
             "time_ms": res["time_ms"],
-            "success": res["path"] is not None,
-            "path_len": len(res["path"]) if res["path"] else None,
+            "success": path is not None,
+            "path_len": compute_path_length(path) if path else None,
             "start_x": r["start"][0],
             "start_y": r["start"][1],
             "goal_x": r["goal"][0],
@@ -80,3 +83,11 @@ def run_and_save(scenario_name, run_id, outdir="output"):
 def run_multiple_and_save(scenario_name, runs=10, outdir="output"):
     for i in range(runs):
         run_and_save(scenario_name, i, outdir)
+
+def compute_path_length(path):
+    if not path or len(path) < 2:
+        return 0.0
+    total = 0.0
+    for i in range(len(path) - 1):
+        total += Grid.heuristic(path[i], path[i+1])
+    return total

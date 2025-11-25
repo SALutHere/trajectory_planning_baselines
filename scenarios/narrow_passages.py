@@ -21,21 +21,24 @@ class NarrowPassages(Scenario):
         W, H = self.width, self.height
         grid = [[1 for _ in range(W)] for _ in range(H)]
 
-        for i in range(self.corridors):
-            y = random.randint(1, H - 2)
+        main_x = W // 2
+        for y in range(H):
+            grid[y][main_x] = 0
+
+        ys = sorted(random.sample(range(2, H-2), self.corridors))
+        for y in ys:
             for x in range(W):
                 grid[y][x] = 0
+            grid[y][main_x] = 0
 
-        for i in range(self.corridors - 1):
-            y1 = random.randint(1, H - 2)
-            x = random.randint(1, W - 2)
-            for y in range(min(y1, y1 + 5), max(y1, y1 + 5)):
-                if 0 <= y < H:
-                    grid[y][x] = 0
+        start_y = ys[0]
+        goal_y  = ys[-1]
 
-        start = (1, 1)
-        goal = (W - 2, H - 2)
-        grid[start[1]][start[0]] = 0
-        grid[goal[1]][goal[0]] = 0
+        start = (1, start_y)
+        goal  = (W - 2, goal_y)
+
+        grid[start_y][1] = 0
+        grid[goal_y][W - 2] = 0
 
         return Grid(grid), start, goal
+
